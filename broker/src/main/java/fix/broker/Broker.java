@@ -1,7 +1,8 @@
 package fix.broker;
 
-import fix.broker.sockets.SocketManager;
+import fix.broker.sockets.SocketController;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Broker 
@@ -13,16 +14,13 @@ public class Broker
     {
       LOGGER.info("Broker Application Start");
 
-      SocketManager socketManager = new SocketManager("127.0.0.1", port);
+      SocketController socketController = new SocketController("127.0.0.1", port);
 
       try {
-        socketManager.startConnection();
-        socketManager.startSenderThread();
-        socketManager.startListenerThread();  
+        socketController.startConnection();
+        System.out.println(socketController.sendMessage("Login"));
       } catch (Exception e) {
-        //Add Logging
-        socketManager.closeConnection();
-        e.printStackTrace();
+        LOGGER.log(Level.SEVERE, e.getMessage());
       }
     }
 }

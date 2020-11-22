@@ -1,5 +1,5 @@
 package fix.market.sockets;
 
-public class SocketInitiator {
+public class SocketController {
   
 }
