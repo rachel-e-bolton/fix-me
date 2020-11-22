@@ -14,10 +14,6 @@ import fix.router.table.RoutingTable;
 // import fix.router.messaging.HeartBeat;
 // import fix.router.sockets.SocketServer;
 
-/**
- * Hello world!
- *
- */
 public class Router {
     private static final Logger LOGGER = Logger.getLogger( "Router" );
     public static final RoutingTable routingTable = new RoutingTable();
@@ -29,7 +25,8 @@ public class Router {
 
         // Start socket server thread
         executor.submit(new SocketServerInitiator(5000));
-        
+        executor.submit(new SocketServerInitiator(5001));
+
         // Start the socket maintainer thread
 
 
