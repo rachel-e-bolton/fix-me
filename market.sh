@@ -1,0 +1,1 @@
+/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/bin/java -Dfile.encoding=UTF-8 -cp /Users/gwasserf/Documents/WeThinkCode_/fixme/market/target/classes fix.market.Market

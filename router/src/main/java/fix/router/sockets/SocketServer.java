@@ -1,19 +1,19 @@
 package fix.router.sockets;
 
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fix.router.Router;
-import fix.router.table.RouteEntry;
-import fix.router.table.RoutingTable;
+import fix.router.routing.Entry;
 
-public class SocketServerInitiator implements Runnable {
-    private static final Logger LOGGER = Logger.getLogger( "SocketServerInitiator" );
+public class SocketServer implements Runnable {
+    private static final Logger LOGGER = Logger.getLogger( "SocketServer" );
     private Integer port;
 
-    public SocketServerInitiator(Integer port) {
+    public SocketServer(Integer port) {
         this.port = port;
     }
 
@@ -22,18 +22,15 @@ public class SocketServerInitiator implements Runnable {
         ServerSocket serverSocket = null;
 
         try {
-            serverSocket = new ServerSocket(this.port);
+            serverSocket = new ServerSocket(this.port, 500, Inet4Address.getByName("0.0.0.0"));
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 
                 LOGGER.log(Level.INFO, "Connection " + clientSocket.toString());
-                Router.routingTable.addEntry(new RouteEntry(clientSocket, clientSocket.toString(), "unauthenticated"));
-                Router.executor.submit(new SocketMaintainer(clientSocket));
+                Router.routingTable.addEntry(new Entry(clientSocket));
+                Router.executor.submit(new ClientSocketMaintainer(clientSocket));
             }
-
-            // PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            // BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         } catch (Exception e) {
             e.printStackTrace();
