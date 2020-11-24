@@ -1,9 +1,10 @@
 package com.fixme.router.processors;
 
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.stream.Stream;
 
-import fix.router.Router;
+import com.fixme.router.App;
 import com.fixme.commons.messaging.Message;
 
 public class RoutingProcessor extends MessageHandler {
@@ -14,7 +15,7 @@ public class RoutingProcessor extends MessageHandler {
 	public void process(PrintWriter out, Message message) {
 		LOGGER.info(String.format("Got message = %s", message));
 		
-		String messagetype = message.get(35);
+		String messagetype = message.get("35");
 
 		if (Stream.of("0", "1", "B", "S").anyMatch(messagetype::equalsIgnoreCase)) {
 			// Socket socket = App.routingTable
@@ -25,7 +26,7 @@ public class RoutingProcessor extends MessageHandler {
 		}
 	}
 
-	public Message routeMessageAndWaitForReponse(Socket socket, Message message) {
-		// Write some code HERE GLEN!!! AAAAHHHHHHHH
-	}
+	// public Message routeMessageAndWaitForReponse(Socket socket, Message message) {
+	// 	// Write some code HERE GLEN!!! AAAAHHHHHHHH
+	// }
 }

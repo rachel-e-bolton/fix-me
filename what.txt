@@ -1,0 +1,13 @@
+router start port 5000
+router start port 5001
+
+market connects to 5001
+router sends logon with id
+router saves market port to routing table
+market saves id and adds to all messages
+market listens for orders on the opened port
+
+broker connects to 5000
+router sends logon with id
+router saves broker port to routing table
+

@@ -1,9 +1,13 @@
-# Simulated FIX stock market
+# Simulated FIX Crypto Market
 
+## Custom subset of FIX protocol used
 
+MsgType
 
+## Commons 
 
-## Resources
+## Router
 
-### FIX Message Dictionary
-https://www.onixs.biz/fix-dictionary.html
+## Market
+
+## Broker
