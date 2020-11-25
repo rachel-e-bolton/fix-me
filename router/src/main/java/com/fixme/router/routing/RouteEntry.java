@@ -1,0 +1,14 @@
+package com.fixme.router.routing;
+
+import java.net.Socket;
+
+public class RouteEntry {
+    public Socket socket;
+    public String type;
+    public String id;
+
+    public RouteEntry(Socket socket, String type) {
+        this.socket = socket;
+        this.type = type;
+    }
+}

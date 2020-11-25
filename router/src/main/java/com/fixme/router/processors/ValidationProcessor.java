@@ -2,8 +2,7 @@ package com.fixme.router.processors;
 
 import java.io.PrintWriter;
 
-import fix.router.exchange.exceptions.ValidationException;
-import fix.router.exchange.messaging.Message;
+import com.fixme.commons.messaging.Message;
 
 public class ValidationProcessor extends MessageHandler {
 
@@ -16,7 +15,7 @@ public class ValidationProcessor extends MessageHandler {
 		try {
 			message.validate();
 			LOGGER.info("Message has been validated");
-		} catch (ValidationException e) {
+		} catch (Exception e) {
 			out.println((new Message(e)).toString());;
 		}
 

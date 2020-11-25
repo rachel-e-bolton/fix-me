@@ -14,4 +14,5 @@ public abstract class MessageHandler {
     }
 
     public abstract void process(PrintWriter out, Message message);
+    public abstract void process(Message message);
 }
