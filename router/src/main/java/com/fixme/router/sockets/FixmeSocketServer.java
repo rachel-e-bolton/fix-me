@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import com.fixme.router.App;
 import com.fixme.commons.messaging.*;
+import com.fixme.router.routing.BrokerRouteEntry;
+import com.fixme.router.routing.MarketRouteEntry;
 import com.fixme.router.routing.RouteEntry;
 
 public class FixmeSocketServer implements Runnable {
@@ -33,7 +35,7 @@ public class FixmeSocketServer implements Runnable {
         
         log.info("Starting BrokerSocketServer thread");
         try {
-            // Instantiate a socket server on 0.0.0.0:5000 for new broker socket connections
+            // Instantiate a socket server on 0.0.0.0:500X for new broker socket connections
             serverSocket = new ServerSocket(this.port, this.backlog, Inet4Address.getByName("0.0.0.0"));
 
             while (true) {
@@ -41,24 +43,27 @@ public class FixmeSocketServer implements Runnable {
                 Socket clientSocket = serverSocket.accept();
                 
                 // Log that a new connection has been received
-                log.info("Connection " + clientSocket.toString());
+                log.info("Connection from " + clientSocket.getLocalAddress().toString());
 
+                RouteEntry routeEntry;
                 // Create a new RouteEntry instance
-                RouteEntry routeEntry = new RouteEntry(clientSocket, this.type);
-
+                if (this.type.equalsIgnoreCase("broker")) {
+                    routeEntry = new BrokerRouteEntry(clientSocket);
+                } else {
+                    routeEntry = new MarketRouteEntry(clientSocket);
+                }
+                
                 // Add routing entry to Application's routing table, returns ID
-                String clientId = App.routingTable.addEntry(routeEntry);
+                App.routingTable.addEntry(routeEntry);
 
                 // Send a logon message to client using PrintWriter
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                // out.println((this.type.equalsIgnoreCase("broker") ? Message.bro : )));
+                out.println(MessageStaticFactory.socketLogonMessage(routeEntry.id));
                 
-
                 // Spawn a thread to listen for incoming messages from client, handle replies and routing as well
-                App.executor.submit(new ClientSocketMaintainer(clientSocket, routeEntry));
+                App.executor.submit(new ClientSocketMaintainer(clientSocket));
             }
         } catch (IOException ex) {
-            // IOException, could not start socket server 
             log.severe("Could not start Broker Server: " + ex.getMessage());
         }
     }

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import com.fixme.commons.messaging.Message;
 
 public abstract class MessageHandler {
-    protected static final Logger LOGGER = Logger.getLogger( "Router" );
+    protected static final Logger log = Logger.getLogger( "Handlers" );
 	protected MessageHandler nextHandler;
 
     public MessageHandler(MessageHandler nextHandler) {

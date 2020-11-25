@@ -5,6 +5,7 @@ import java.net.Socket;
 public class RouteEntry {
     public Socket socket;
     public String type;
+    public String idTag;
     public String id;
 
     public RouteEntry(Socket socket, String type) {

@@ -16,14 +16,8 @@ public class MessageStaticFactory {
 		return message;
 	}
 
-	public static Message brokerLogonMessage(String id) {
+	public static Message socketLogonMessage(String id) {
 		String reply = String.format("35=L|109=%s|", id);
-		Message message = new Message(MessageChecksum.appendCheckSum(reply));
-		return message;
-	}
-
-	public static Message marketLogonMessage(String id) {
-		String reply = String.format("35=L|108=%s|", id);
 		Message message = new Message();
 		message.rawMessage = MessageChecksum.appendCheckSum(reply);
 		return message;

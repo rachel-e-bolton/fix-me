@@ -2,9 +2,9 @@ import socket
 from time import sleep
 
 sending = [
-    "35=A|1=Glen Wasserfall|",
-    "35=3|109=B0000000001|",
-    "35=3|109=B0000000001|"
+    "135=A|1=Glen Wasserfall|",
+    "135=3|109=B0000000001|",
+    "135=3|109=B0000000001|"
 ]
 
 def checksum(string):

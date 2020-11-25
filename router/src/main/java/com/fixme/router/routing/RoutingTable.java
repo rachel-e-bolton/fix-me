@@ -8,17 +8,17 @@ public class RoutingTable {
     private Integer brokerCount = 0;
     private Integer marketCount = 0;
 
-    public String addEntry(RouteEntry entry) {
+    public void addEntry(RouteEntry entry) {
+        entry.id = generateId(entry.type);
         this.routingTable.add(entry);
-        return (entry.type.equalsIgnoreCase("broker") ? generateBrokerId() : generateMarketId() );
     }
 
-    public String generateBrokerId() {
-        return String.format("B%010d", ++brokerCount);
-    }
-
-    public String generateMarketId() {
-        return String.format("M%010d", ++marketCount);
+    private String generateId(String type) {
+        if (type.equals("broker")) {
+            return String.format("B%010d", ++brokerCount);
+        } else {
+            return String.format("M%010d", ++marketCount);
+        }
     }
 
     public RouteEntry findEntry(String clientId) {
@@ -47,9 +47,9 @@ public class RoutingTable {
         }
     }
 
-    public void deleteEntry(String clientId) {
+    public void deleteEntry(RouteEntry routeEntry) {
         for (RouteEntry entry : routingTable) {
-            if (entry.id.equalsIgnoreCase(clientId)) {
+            if (entry.id.equalsIgnoreCase(routeEntry.id)) {
                 this.routingTable.remove(entry);
             }
         }

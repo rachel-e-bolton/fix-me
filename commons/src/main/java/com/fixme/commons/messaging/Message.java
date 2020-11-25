@@ -18,20 +18,6 @@ public class Message {
 		this.rawParts = Arrays.asList(this.rawMessage.split("\\|"));
 	}
 
-	public Message(Exception exp) {
-		String reply = String.format("35=3|58=Error: %s|", exp.getMessage());
-
-		String checksum = MessageChecksum.calculateChecksum(reply);
-		rawMessage = reply + "10=" + checksum + "|";
-	}
-
-	public void validate() throws Exception {
-		MessageValidation.validateMessageFormat(rawParts);
-		MessageValidation.validateCodePosition(rawParts);
-		MessageValidation.validateDuplicateCodes(rawParts);
-		MessageValidation.validateChecksum(rawParts);
-	}
-
 	public String get(String key) {
 		for (String part : rawParts) {
 			if (part.startsWith(key + "=")) {
