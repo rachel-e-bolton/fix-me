@@ -19,13 +19,10 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     s.connect(('127.0.0.1', 5000))
     while True:
-        # Get Broker ID first
+        # Get Broker ID first need to save broker ID to worky
         data = s.recv(1024)
         print(data.strip())
 
-        # s.sendall(bytes(sending[1] + checksum(sending[1]) + "\n", encoding='ascii'))
-        # data = s.recv(1024)
-        # print(data.strip())
         input("Send?")
         s.sendall(bytes(sending[0] + checksum(sending[0]) + "\n", encoding='ascii'))
 except KeyboardInterrupt:

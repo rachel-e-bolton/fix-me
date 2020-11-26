@@ -15,6 +15,8 @@ public class RelayProcessor extends RequestHandler {
 		super(nextHandler);
 	}
 
+	// TODO Make some logs, Jeff is weird
+
 	@Override
 	public Response process(Request request) {
 		if (request.type == RequestType.BUY || request.type == RequestType.SELL) {

@@ -40,7 +40,7 @@ public class App {
         // Take initial message from router and set this markets ID
         receiveAndSetLogonId();
         sendMarketName();
-
+        listInstruments();
 
         Order order = null;
         while (true) {
@@ -88,6 +88,7 @@ public class App {
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
                 log.severe(String.format("Sending :: Rejections :: %s", e.getMessage()));
                 sendMessage(MessageStaticFactory.rejectOrder(order, e.getMessage()));
             }
@@ -162,5 +163,11 @@ public class App {
         } else {
             sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot sell %s at this price", instrument.name)));
         }        
+    }
+
+    private static void listInstruments() {
+        for (Instrument i : market.instruments) {
+            log.info(String.format("%-20s[%-5s] => Units = %-4d : minBuy=%-20.2f : maxSell=%-20.2f", i.name, i.code, i.availableUnits, i.minBuyPrice, i.maxSellPrice));
+        }
     }
 }

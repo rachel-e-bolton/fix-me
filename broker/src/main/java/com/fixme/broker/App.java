@@ -99,7 +99,7 @@ public class App {
         for (String s : instruments) {
             String name = s.split(",")[0];
             String code = s.split(",")[1];
-            System.out.println(String.format("%02d) %-7s %s", count, name, code));
+            System.out.println(String.format("% 2d) %-7s %s", count, name, code));
             count++;
         }
         
@@ -108,7 +108,7 @@ public class App {
                 System.out.print("\nSelect an instrument from 1 to 10 : ");
                 Integer answer = Integer.parseInt(userInput.nextLine());
                 if (answer > 0 && answer < 11) {
-                    return instruments.get(answer - 1);
+                    return instruments.get(answer - 1).split(",")[0];
                 }
             } catch (Exception e) {
                 continue;     
@@ -131,7 +131,7 @@ public class App {
     private static OrderType selectOrderType() {
         cls();
 
-        System.out.println("Would [you like to buy or sell?");
+        System.out.println("Would you like to buy or sell?");
         
         while (true) {
             System.out.println("1) Buy");
@@ -176,6 +176,8 @@ public class App {
             // This is not handled at all, because lazy.
             // Use this to create a message then do stuff with it
             userInput.nextLine();
+
+            MessageStaticFactory.fromRawString(inputLine);
 
             if (inputLine == null) {
                 log.severe("Connection to router lost");

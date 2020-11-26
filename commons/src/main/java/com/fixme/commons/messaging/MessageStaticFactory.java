@@ -25,8 +25,10 @@ public class MessageStaticFactory {
 
 	public static Message orderMessage(Order order, OrderType type) {
 
-		String reply = String.format("35=S|109=%s|M=%s|I=%s|A=%s|P=%s|", 
-				order.clientId, order.market, order.instrument, order.amount, order.price);
+		String buyOrSell = (type == OrderType.BUY) ? "B" : "S";
+
+		String reply = String.format("35=%s|109=%s|M=%s|I=%s|A=%s|P=%s|", 
+				buyOrSell, order.clientId, order.market, order.instrument, order.amount, order.price);
 
 		Message message = new Message();
 		message.rawMessage = MessageChecksum.appendCheckSum(reply);
@@ -50,7 +52,7 @@ public class MessageStaticFactory {
 
 	public static Message acceptOrder(Order order) {
 		String reply = String.format("35=1|109=%s|M=%s|I=%s|A=%s|P=%s|", 
-				order.clientId, order.market, order.amount, order.price);
+				order.clientId, order.market, order.instrument, order.amount, order.price);
 		
 		Message message = new Message(MessageChecksum.appendCheckSum(reply));
 		return message;

@@ -45,6 +45,7 @@ public class ClientSocketMaintainer implements Runnable {
                 if (response != null) {
                     response.send();
                 }
+                // TODO : Log here for fun times
             }    
         } catch (IOException e) {
             log.severe(String.format("[%s] %s", socketFriendlyName, e.getMessage()));

@@ -22,6 +22,7 @@ public class ValidationProcessor extends RequestHandler {
 			MessageValidation.validateMessage(request.message.toString());
 			return nextHandler.process(request);
 		} catch (Exception e) {
+			log.warning("Message is invalid");
 			return new Response(request.source, MessageStaticFactory.failResponse(e.getMessage()));
 		}
 	}
