@@ -2,9 +2,9 @@ import socket
 from time import sleep
 
 sending = [
-    "135=A|1=Glen Wasserfall|",
-    "135=3|109=B0000000001|",
-    "135=3|109=B0000000001|"
+    "35=B|109=B0000000001|M=Crypto|I=ETH|A=1|P=5000.0|",
+    "35=3|109=B0000000001|",
+    "35=3|109=B0000000001|"
 ]
 
 def checksum(string):
@@ -15,20 +15,19 @@ def checksum(string):
     print(str(total).zfill(3))
     return "10={}|".format(str(total).zfill(3))
 
-checksum("35=3|58=Error: Checksum is invalid|10=032|")
-
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     s.connect(('127.0.0.1', 5000))
     while True:
-        s.sendall(bytes(sending[0] + checksum(sending[0]) + "\n", encoding='ascii'))
+        # Get Broker ID first
         data = s.recv(1024)
         print(data.strip())
 
-        s.sendall(bytes(sending[1] + checksum(sending[1]) + "\n", encoding='ascii'))
-        data = s.recv(1024)
-        print(data.strip())
+        # s.sendall(bytes(sending[1] + checksum(sending[1]) + "\n", encoding='ascii'))
+        # data = s.recv(1024)
+        # print(data.strip())
         input("Send?")
+        s.sendall(bytes(sending[0] + checksum(sending[0]) + "\n", encoding='ascii'))
 except KeyboardInterrupt:
     raise
 except Exception as e:

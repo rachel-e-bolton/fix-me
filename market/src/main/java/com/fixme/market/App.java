@@ -38,8 +38,11 @@ public class App {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         // Take initial message from router and set this markets ID
-        setLogonId();
+        receiveAndSetLogonId();
+        sendMarketName();
 
+
+        Order order = null;
         while (true) {
             try {
 
@@ -62,17 +65,21 @@ public class App {
                     break;
                 }
 
-                Order order = new Order(message);
+                order = new Order(message);
 
                 switch (message.get("35")) {
 
                     case "B":
                         log.info(String.format("Processing Buy Order"));
+                        if (market.instrumenByCode(message.get("I")) == null)
+                            throw new Exception("Cannot find instrument");
                         tryBuyOrder(order);
                         break;
                 
                     case "S":
                         log.info(String.format("Processing Sell Order"));
+                        if (market.instrumenByCode(message.get("I")) == null)
+                            throw new Exception("Cannot find instrument");
                         trySellOrder(order);
                         break;
 
@@ -81,8 +88,8 @@ public class App {
                 }
 
             } catch (Exception e) {
-                log.severe(String.format("Sending :: Rejection :: %s", e.getMessage()));
-                MessageStaticFactory.failResponse(e.getMessage());
+                log.severe(String.format("Sending :: Rejections :: %s", e.getMessage()));
+                sendMessage(MessageStaticFactory.rejectOrder(order, e.getMessage()));
             }
         }
         in.close();
@@ -128,16 +135,22 @@ public class App {
         }
     }
 
-    private static void setLogonId() throws IOException {
+    private static void receiveAndSetLogonId() throws IOException {
 
         Message init = MessageStaticFactory.fromRawString(in.readLine());
-
         market.id = init.get("109"); 
         log.info(String.format("Market added to routing table ID=%s", market.id));
 
     }
 
-    public static void trySellOrder(Order order) {
+    private static void sendMarketName() throws IOException {
+
+        Message name = MessageStaticFactory.identifyMarket(market.id, market.name);
+        out.println(name);
+        log.info(String.format("Sent market name [%s] to router", market.name));
+    }
+
+    private static void trySellOrder(Order order) {
         Instrument instrument = market.instrumenByCode(order.instrument);
 
         Integer requestedSellAmount = Integer.parseInt(order.amount);

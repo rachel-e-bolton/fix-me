@@ -8,45 +8,50 @@ import com.fixme.commons.messaging.*;
 
 import com.fixme.router.App;
 import com.fixme.router.processors.*;
+import com.fixme.router.request.Request;
+import com.fixme.router.request.Response;
 
 public class ClientSocketMaintainer implements Runnable {
 
     private Socket socket;
+    public String socketFriendlyName;
     private static final Logger log = Logger.getLogger("ClientSocketMaintainer");
 
     public ClientSocketMaintainer(Socket socket) {
         this.socket = socket;
+        String ip = socket.getInetAddress().toString();
+		Integer port = socket.getPort();
+		this.socketFriendlyName = String.format("%s:%d", ip.substring(1, ip.length()), port);
     }
 
     public void run() {
 
-        // setup handlers here
+        log.info(String.format("Starting socket maintainer for %s", socketFriendlyName));
 
-        MessageHandler messageHandler = 
-            new ValidationProcessor(
-                new RoutingProcessor(null)    
+        RequestHandler request = new ValidationProcessor(
+            new ClassificationProcessor(
+                new RelayProcessor(null)
+            )
         );
 
         String inputLine;
-        
+
         try {
-            // PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-          
+
             while ((inputLine = in.readLine()) != null) {
-
-                Message message = new Message(inputLine);
-
-                message.socket = socket;
-
-                messageHandler.process(message);
-
+                Response response = request.process(new Request(socket, new Message(inputLine)));
+                if (response != null) {
+                    response.send();
+                }
             }    
         } catch (IOException e) {
-            e.printStackTrace();
+            log.severe(String.format("[%s] %s", socketFriendlyName, e.getMessage()));
         }
   
         // Delete RouteEntry when this thread is done processing
+        log.info(String.format("Socket maintainer for %s shutting down", socketFriendlyName));
         App.routingTable.deleteEntry(this.socket);
     }
 }

@@ -35,9 +35,16 @@ public class MessageStaticFactory {
 
 	public static Message rejectOrder(Order order, String reason) {
 		String reply = String.format("35=0|109=%s|M=%s|I=%s|A=%s|P=%s|58=%s|", 
-				order.clientId, order.market, order.amount, order.price, reason);
+				order.clientId, order.market, order.instrument, order.amount, order.price, reason);
 
 		Message message = new Message(MessageChecksum.appendCheckSum(reply));		
+		return message;
+	}
+
+	public static Message identifyMarket(String id, String name) {
+		String reply = String.format("35=I|109=%s|M=%s|", id, name);
+		
+		Message message = new Message(MessageChecksum.appendCheckSum(reply));
 		return message;
 	}
 

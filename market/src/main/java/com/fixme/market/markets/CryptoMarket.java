@@ -4,6 +4,8 @@ public class CryptoMarket extends Market{
 	public CryptoMarket() {
 		super("Crypto");
 
+        // This should be pulled from a file to add alternate markets.
+
 		instruments.add(new Instrument("ETH", "Ethereum"));
         instruments.add(new Instrument("XRP", "Ripple"));
         instruments.add(new Instrument("LTC", "Litecoin"));

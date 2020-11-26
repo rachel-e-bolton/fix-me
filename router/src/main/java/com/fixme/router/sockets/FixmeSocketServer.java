@@ -33,9 +33,9 @@ public class FixmeSocketServer implements Runnable {
     public void run() {
         ServerSocket serverSocket = null;
         
-        log.info("Starting BrokerSocketServer thread");
+        log.info(String.format("Starting %sSocketServer thread on port %d", this.type, this.port));
         try {
-            // Instantiate a socket server on 0.0.0.0:500X for new broker socket connections
+            // Instantiate a socket server on 0.0.0.0:500X for new broker/market socket connections
             serverSocket = new ServerSocket(this.port, this.backlog, Inet4Address.getByName("0.0.0.0"));
 
             while (true) {
@@ -43,10 +43,11 @@ public class FixmeSocketServer implements Runnable {
                 Socket clientSocket = serverSocket.accept();
                 
                 // Log that a new connection has been received
-                log.info("Connection from " + clientSocket.getLocalAddress().toString());
+                String ip = clientSocket.getInetAddress().toString();
+                log.info(String.format("Connection from %s:%d", ip.substring(1, ip.length()), clientSocket.getPort()));
 
-                RouteEntry routeEntry;
                 // Create a new RouteEntry instance
+                RouteEntry routeEntry;
                 if (this.type.equalsIgnoreCase("broker")) {
                     routeEntry = new BrokerRouteEntry(clientSocket);
                 } else {

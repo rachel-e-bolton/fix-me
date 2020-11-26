@@ -1,38 +1,28 @@
 package com.fixme.router.processors;
 
-import java.io.PrintWriter;
+import java.util.logging.Logger;
 
-import com.fixme.commons.messaging.Message;
 import com.fixme.commons.messaging.MessageStaticFactory;
 import com.fixme.commons.messaging.MessageValidation;
 
-public class ValidationProcessor extends MessageHandler {
+import com.fixme.router.request.Request;
+import com.fixme.router.request.Response;
 
-	public ValidationProcessor(MessageHandler nextHandler) {
+public class ValidationProcessor extends RequestHandler {
+
+	public ValidationProcessor(RequestHandler nextHandler) {
 		super(nextHandler);
 	}
 
 	@Override
-	public void process(PrintWriter out, Message message) {
-
-
+	public Response process(Request request) {
+		Logger log = Logger.getLogger("ValidationProcessor");
+		log.info(String.format("Received message from %s => \u001B[36m%s\u001B[0m", request.socketFriendlyName(), request.message.toString()));
 		try {
-			MessageValidation.validateMessage(message.toString());
-		} catch (Exception ex) {
-			// Message was not valid, send failure message
-			out.println(MessageStaticFactory.failResponse("Validation Failed " + ex.getMessage()));
-			return;
+			MessageValidation.validateMessage(request.message.toString());
+			return nextHandler.process(request);
+		} catch (Exception e) {
+			return new Response(request.source, MessageStaticFactory.failResponse(e.getMessage()));
 		}
-
-		if (nextHandler != null) {
-			this.nextHandler.process(out, message);
-		}
-
-		return;
-	}
-
-	@Override
-	public void process(Message message) {
-		// TODO Auto-generated method stub
 	}
 }

@@ -3,6 +3,8 @@ package com.fixme.router.routing;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import com.fixme.router.routing.*;
+
 public class RoutingTable {
     private final ArrayList<RouteEntry> routingTable = new ArrayList<>();
     private Integer brokerCount = 0;
@@ -29,6 +31,16 @@ public class RoutingTable {
         }
         return null;
     }
+
+    public RouteEntry findMarket(String name) {
+        for (RouteEntry entry : routingTable) {
+            if (entry.name.equalsIgnoreCase(name)) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
 
     public RouteEntry findEntry(Socket socket) {
         for (RouteEntry entry : routingTable) {
