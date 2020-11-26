@@ -3,8 +3,6 @@ package com.fixme.router.routing;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import com.fixme.router.routing.*;
-
 public class RoutingTable {
     private final ArrayList<RouteEntry> routingTable = new ArrayList<>();
     private Integer brokerCount = 0;

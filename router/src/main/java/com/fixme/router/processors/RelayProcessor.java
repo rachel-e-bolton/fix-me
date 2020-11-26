@@ -1,12 +1,10 @@
 package com.fixme.router.processors;
 
-import com.fixme.commons.messaging.Message;
 import com.fixme.commons.messaging.MessageStaticFactory;
 import com.fixme.router.App;
 import com.fixme.router.request.Request;
 import com.fixme.router.request.RequestType;
 import com.fixme.router.request.Response;
-import com.fixme.router.routing.MarketRouteEntry;
 import com.fixme.router.routing.RouteEntry;
 
 public class RelayProcessor extends RequestHandler {
