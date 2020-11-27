@@ -12,6 +12,8 @@ import com.fixme.commons.orders.Order;
 import com.fixme.market.markets.CryptoMarket;
 import com.fixme.market.markets.Instrument;
 
+import com.fixme.commons.database.*;
+
 public class App {
     static {
         System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
@@ -25,6 +27,7 @@ public class App {
 
     public static void main( String[] args ) throws Exception {
 
+        Database.InitialiseDB();
         log.info(String.format("Market is starting up"));
 
         try {
