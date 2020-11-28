@@ -33,7 +33,7 @@ class BrokerInstance():
 
 	def sell(self, market, instrument, amount, price):
 		msg_base = "|".join([
-			"35=B",
+			"35=S",
 			f"109={self.id}",
 			f"M={market}",
 			f"I={instrument}",
@@ -45,7 +45,13 @@ class BrokerInstance():
 		return self.get_response()
 
 	def get_response(self):
-		print("Waiting for response")
 		data = self.sock.recv(1024)
 		data = str(data.strip())
-		return data
+		if "35=1" in data:
+			return "\u001b[32mACCEPT\u001b[0m"
+		elif "35=0" in data:
+			return "\u001b[33mREJECT\u001b[0m : " + data.split("58=")[-1].split("|")[0]
+		elif "35=3" in data and "58=" in data:
+			return "\u001b[31mERROR\u001b[0m : " + data.split("58=")[-1].split("|")[0]
+		else:
+			return "\u001b[31mUNKNOWN ERROR\u001b[0m :( " + data
