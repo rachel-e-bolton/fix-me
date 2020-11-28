@@ -40,3 +40,7 @@ def order_bad_amounts():
 	print(f"Selling 1 ETH to Crypto at R-1", broker.sell("Crypto", "ETH", 1, -1))
 	print(f"Buying 1000000000000 ETH from Crypto at R1", broker.buy("Crypto", "ETH", 1000000000000, 1))
 	print(f"Buying 1 ETH from Crypto at R10000000000000.00", broker.buy("Crypto", "ETH", 1, 10000000000000) + " Because why not :)")
+
+def send_anything(string):
+	broker = BrokerInstance()
+	print(f"Sending '{string}'", broker.send(string))

@@ -44,6 +44,10 @@ class BrokerInstance():
 		self.sock.sendall(bytes(message + "\n", encoding='utf-8'))
 		return self.get_response()
 
+	def send(self, message):
+		self.sock.sendall(bytes(message + "\n", encoding='utf-8'))
+		return self.get_response()
+
 	def get_response(self):
 		data = self.sock.recv(1024)
 		data = str(data.strip())

@@ -4,7 +4,11 @@ from simulation.scenarios import *
 if __name__ == "__main__":
     # boot_environment()
  
-    print("\u001b[36m=== Simulating many buy requests ===\u001b[0m")
+    print("\u001b[36m=== Simulating garbage request ===\u001b[0m")
+
+    send_anything("I want an increase dammit!!!")
+
+    print("\n\n\u001b[36m=== Simulating many buy requests ===\u001b[0m")
     
     buy_instrument_many_times("Crypto", "ETH", 10)
 

@@ -34,7 +34,7 @@ public class MessageValidation {
 		List<String> parts = Arrays.asList(rawString.split("\\|"));
 		for (String part : parts) {
 			if (part.split("=").length < 2) {
-				throw new Exception(String.format("Part of message is malformed at %s", part));
+				throw new Exception(String.format("Part of message is malformed at [%s]", part));
 			}
 		}
 	}
