@@ -16,7 +16,7 @@ public class MarketIdentifyProcessor extends RequestHandler {
 
 	@Override
 	public Response process(Request request) {
-		Logger log = Logger.getLogger("ClientSocketMaintainer");
+		Logger log = Logger.getLogger("Router");
 		// Add name to route entry for a market, this allows multiple markets
 		String id = request.message.get("109");
 		String name = request.message.get("M");

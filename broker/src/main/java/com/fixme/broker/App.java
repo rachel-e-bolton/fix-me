@@ -13,7 +13,7 @@ import com.fixme.commons.orders.OrderType;
 
 public class App {
     static {
-        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
+        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [\u001b[36;1mBROKER\u001b[0m] [%4$-7s] %5$s %n");
     }
 
     private static Socket socket;
@@ -21,7 +21,7 @@ public class App {
     private static BufferedReader in;
     private static String id;
     
-    private static final Logger log = Logger.getLogger( "Market" );
+    private static final Logger log = Logger.getLogger( "Broker" );
     private static Scanner userInput = new Scanner(System.in);
 
     public static void main( String[] args ) throws Exception {

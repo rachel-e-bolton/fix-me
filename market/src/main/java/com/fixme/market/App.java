@@ -14,14 +14,14 @@ import com.fixme.market.markets.Instrument;
 
 public class App {
     static {
-        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$-7s] %5$s %n");
+        System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [\u001b[35;1mMARKET\u001b[0m] [%4$-7s] %5$s %n");
     }
 
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
     private static CryptoMarket market = new CryptoMarket();
-    private static final Logger log = Logger.getLogger( "Market" );
+    public static final Logger log = Logger.getLogger( "Market" );
 
     public static void main( String[] args ) throws Exception {
 
@@ -31,6 +31,7 @@ public class App {
             socket = new Socket("localhost", 5001);
         } catch (Exception e) {
             log.severe(String.format("Market cannot start, router may be unavailable [%s]", e.getMessage()));
+            socket.close();
             System.exit(1);
         }
 

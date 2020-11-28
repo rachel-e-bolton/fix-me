@@ -14,7 +14,7 @@ import com.fixme.router.routing.MarketRouteEntry;
 import com.fixme.router.routing.RouteEntry;
 
 public class FixmeSocketServer implements Runnable {
-    private static final Logger log = Logger.getLogger( "BrokerSocketServer" );
+    private static final Logger log = Logger.getLogger( "Router" );
     private Integer port;
     private Integer backlog;
     private String type;

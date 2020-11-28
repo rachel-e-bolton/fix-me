@@ -16,7 +16,7 @@ public class ValidationProcessor extends RequestHandler {
 
 	@Override
 	public Response process(Request request) {
-		Logger log = Logger.getLogger("ValidationProcessor");
+		Logger log = Logger.getLogger("Router");
 		log.info(String.format("Received message from %s => \u001B[36m%s\u001B[0m", request.socketFriendlyName(), request.message.toString()));
 		try {
 			MessageValidation.validateMessage(request.message.toString());

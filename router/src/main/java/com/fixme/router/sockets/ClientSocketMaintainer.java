@@ -15,7 +15,7 @@ public class ClientSocketMaintainer implements Runnable {
 
     private Socket socket;
     public String socketFriendlyName;
-    private static final Logger log = Logger.getLogger("ClientSocketMaintainer");
+    private static final Logger log = Logger.getLogger("Router");
 
     public ClientSocketMaintainer(Socket socket) {
         this.socket = socket;
