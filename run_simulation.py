@@ -7,13 +7,13 @@ import socket
 
 
 if __name__ == "__main__":
-    boot_environment()
+    # boot_environment()
 
  
 
-    buy_instrument_many_times("ETH")
+    buy_instrument_many_times("Crypto", "ETH")
 
 
 
     input("Pressing any key will kill the simulation")
-    cleanup_environment()
+    # cleanup_environment()

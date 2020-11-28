@@ -17,7 +17,6 @@ public class ClassificationProcessor extends RequestHandler {
 	@Override
 	public Response process(Request request) {
 		String messageType = request.message.get("35");
-		// Logger log = Logger.getLogger("Router");
 		
 		if (	   messageType.equalsIgnoreCase("B")) {
 			request.type = RequestType.BUY;

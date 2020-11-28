@@ -30,7 +30,9 @@ public class ClientSocketMaintainer implements Runnable {
 
         RequestHandler request = new ValidationProcessor(
             new ClassificationProcessor(
-                new RelayProcessor(null)
+                new OrderValidation(
+                    new RelayProcessor(null)
+                )
             )
         );
 

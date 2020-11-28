@@ -3,6 +3,7 @@ package com.fixme.commons.orders;
 import com.fixme.commons.messaging.Message;
 
 public class Order {
+	public Boolean valid = true;
 	public String market;
 	public String instrument;
 	public String amount;
@@ -15,6 +16,7 @@ public class Order {
 		this.amount = amount.toString();
 		this.price = price.toString();
 		this.clientId = clientId;
+		this.validateOrder();
 	}
 
 	public Order(Message message) {
@@ -23,5 +25,13 @@ public class Order {
 		this.amount =     message.get("A");
 		this.price =      message.get("P");
 		this.clientId =   message.get("109");
+		this.validateOrder();
+	}
+
+	public void validateOrder() {
+		// Only checks for negatives at the moment
+		if (this.amount.contains("-") || this.price.contains("-")) {
+			this.valid = false;
+		}
 	}
 }

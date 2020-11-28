@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
+import java.math.BigInteger;
+import java.math.BigDecimal;
+
 
 import com.fixme.commons.messaging.*;
 import com.fixme.commons.orders.Order;
@@ -88,11 +91,14 @@ public class App {
                         throw new Exception("Not a recognised order type");
                 }
 
+            } catch (NumberFormatException e) {
+                log.severe("Rejection :: Message contains invalid number format");
+                sendMessage(MessageStaticFactory.rejectOrder(order, "Message contains invalid number format"));
             } catch (Exception e) {
                 e.printStackTrace();
-                log.severe(String.format("Sending :: Rejections :: %s", e.getMessage()));
+                log.severe(String.format("Rejection :: %s", e.getMessage()));
                 sendMessage(MessageStaticFactory.rejectOrder(order, e.getMessage()));
-            }
+            } 
         }
         in.close();
         out.close();
@@ -119,20 +125,47 @@ public class App {
         return order;
     }
 
+    private static void trySellOrder(Order order) {
+        Instrument instrument = market.instrumenByCode(order.instrument);
+
+        Integer requestedSellAmount = Integer.parseInt(order.amount);
+        Double requestedSellPrice = Double.parseDouble(order.price);
+
+        if (!order.valid) {
+            sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Invalid Order", instrument.name)));
+            return;
+        }
+
+        if (requestedSellPrice <= instrument.maxSellPrice) {
+            instrument.availableUnits += requestedSellAmount;
+            sendMessage(MessageStaticFactory.acceptOrder(order));
+        } else {
+            log.warning(String.format("Rejected : Sell price for %s is too low", instrument.name));
+            sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot sell %s at this price", instrument.name)));
+        }        
+    }
+
     public static void tryBuyOrder(Order order) {
         Instrument instrument = market.instrumenByCode(order.instrument);
 
         Integer requestedBuyAmount = Integer.parseInt(order.amount);
         Double requestedBuyPrice = Double.parseDouble(order.price);
 
+        if (!order.valid) {
+            sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Invalid Order", instrument.name)));
+            return;
+        }
+
         if (requestedBuyPrice >= instrument.minBuyPrice) {
             if (requestedBuyAmount <= instrument.availableUnits) {
                 instrument.availableUnits -= requestedBuyAmount;
                 sendMessage(MessageStaticFactory.acceptOrder(order));
             } else {
-                sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot buy %s at this price", instrument.name)));
+                log.warning(String.format("Rejected : Not enough %s units to complete order", instrument.name));
+                sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Not enough units to complete order", instrument.name)));
             }
         } else {
+            log.warning(String.format("Rejected : Buy price for %s is too low", instrument.name));
             sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot buy %s at this price", instrument.name)));
         }
     }
@@ -142,7 +175,6 @@ public class App {
         Message init = MessageStaticFactory.fromRawString(in.readLine());
         market.id = init.get("109"); 
         log.info(String.format("Market added to routing table ID=%s", market.id));
-
     }
 
     private static void sendMarketName() throws IOException {
@@ -150,20 +182,6 @@ public class App {
         Message name = MessageStaticFactory.identifyMarket(market.id, market.name);
         out.println(name);
         log.info(String.format("Sent market name [%s] to router", market.name));
-    }
-
-    private static void trySellOrder(Order order) {
-        Instrument instrument = market.instrumenByCode(order.instrument);
-
-        Integer requestedSellAmount = Integer.parseInt(order.amount);
-        Double requestedSellPrice = Double.parseDouble(order.price);
-
-        if (requestedSellPrice <= instrument.maxSellPrice) {
-            instrument.availableUnits += requestedSellAmount;
-            sendMessage(MessageStaticFactory.acceptOrder(order));
-        } else {
-            sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot sell %s at this price", instrument.name)));
-        }        
     }
 
     private static void listInstruments() {
