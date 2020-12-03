@@ -15,5 +15,12 @@ public class Instrument {
 		this.availableUnits = ThreadLocalRandom.current().nextInt(0, 1000);
 		this.minBuyPrice = Double.valueOf(ThreadLocalRandom.current().nextInt(1, 1000));
 		this.maxSellPrice = Double.valueOf(ThreadLocalRandom.current().nextInt(1, 1000));
-	}
+  }
+  public Instrument(String code, String name, Integer availableUnits, Double minBuyPrice, Double maxSellPrice) {
+    this.name = name;
+    this.code = code;
+    this.availableUnits = availableUnits;
+    this.minBuyPrice = minBuyPrice;
+    this.maxSellPrice = maxSellPrice;
+  }
 }
