@@ -5,6 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.fixme.commons.database.Database;
 import com.fixme.router.routing.RoutingTable;
 import com.fixme.router.sockets.*;
 
@@ -20,6 +21,13 @@ public class App {
 
         log.info("Router Application Start");
 
+        try {
+          Database.checkInstrumentsSchema();
+          Database.checkTransactionsSchema();
+        } catch (Exception e) {
+          log.warning(String.format("Problem setting up database: [%s].\nNew Markets and Transactions may not be backed up.", e.getMessage()));
+        }
+        
         executor.submit(new FixmeSocketServer(5000, "broker"));
         executor.submit(new FixmeSocketServer(5001, "market"));
 
