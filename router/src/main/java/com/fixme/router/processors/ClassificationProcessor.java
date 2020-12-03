@@ -1,7 +1,5 @@
 package com.fixme.router.processors;
 
-import java.util.logging.Logger;
-
 import com.fixme.commons.messaging.MessageStaticFactory;
 import com.fixme.router.App;
 import com.fixme.router.request.Request;
