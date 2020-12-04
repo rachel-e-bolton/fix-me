@@ -10,10 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
-  static {
-    System.setProperty("java.util.logging.SimpleFormatter.format",
-        "[%1$tF %1$tT] [\u001b[36;1mDATABASE\u001b[0m] [%4$-7s] %5$s %n");
-  }
 
   private static final Connection connection = null;
   private static final Logger log = Logger.getLogger("Database");
@@ -71,9 +67,9 @@ public class Database {
   }
 
   public static void checkInstrumentsSchema() throws SQLException, ClassNotFoundException {
-    String sql = "CREATE TABLE IF NOT EXISTS instruments (\n" + "	market_name varchar NOT NULL,\n"
-        + "	instrument_code varchar NOT NULL,\n" + "	instrument_name varchar NOT NULL,\n"
-        + " PRIMARY KEY (market_name,instrument_code)" + ");";
+    String sql = "CREATE TABLE IF NOT EXISTS instruments (\n" + " market_name varchar NOT NULL,\n"
+        + "	instrument_code varchar NOT NULL,\n" + "	instrument_name varchar NOT NULL\n"
+        + ");";
     Connection conn = getInstance();
 
     try {
@@ -87,8 +83,7 @@ public class Database {
     }
   }
 
-  public static void registerInstrument(String marketName, String instrumentCode, String instrumentName,
-      Integer quantity, Double minBuyPrice, Double maxSellPrice) throws SQLException, ClassNotFoundException {
+  public static void registerInstrument(String marketName, String instrumentCode, String instrumentName) throws SQLException, ClassNotFoundException {
     if (!(instrumentExists(marketName, instrumentCode))) {
       String sql = "INSERT INTO instruments(market_name,instrument_code,instrument_name) VALUES (?,?,?)";
       Connection conn = getInstance();
@@ -112,7 +107,7 @@ public class Database {
 
   public static boolean instrumentExists(String marketName, String instrumentCode)
       throws SQLException, ClassNotFoundException {
-    String sql = "SELECT (count(*) > 0) as found FROM instruments WHERE market_name LIKE ? AND instrument_code LIKE ?";
+    String sql = "SELECT * FROM instruments WHERE market_name = ? AND instrument_code = ?";
     Connection conn = getInstance();
 
     try {
@@ -123,8 +118,10 @@ public class Database {
 
       ResultSet rs = pStatement.executeQuery();
 
-      if (rs.next()) {
-        return true;
+      while (rs.next()) {
+        if (rs.getString("market_name") == marketName && rs.getString("instrument_code") == instrumentCode) {
+          return true;
+        }
       }
     } catch (Exception e) {
       log.severe(String.format("Exception while checking DB for instrument: [%s]", e.getMessage()));
@@ -146,7 +143,7 @@ public class Database {
       ResultSet rs = statement.executeQuery(sql);
 
       while (rs.next()) {
-        instruments.add(String.format("[MARKET]: [%s] - [INSTRUMENT]: [%s] - [CODE]: [%s]", rs.getString("market_name"),
+        instruments.add(String.format("[MARKET]: %s - [INSTRUMENT]: %s - [CODE]: %s", rs.getString("market_name"),
             rs.getString("instrument_name"), rs.getString("instrument_code")));
       }
     } catch (Exception e) {
