@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-
+import com.fixme.commons.database.Database;
 import com.fixme.commons.messaging.*;
 import com.fixme.commons.orders.Order;
 import com.fixme.market.markets.CryptoMarket;
@@ -26,6 +26,8 @@ public class App {
 
     public static void main( String[] args ) throws Exception {
 
+      //if no file path specified 
+
         log.info(String.format("Market is starting up"));
 
         try {
@@ -40,9 +42,16 @@ public class App {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         // Take initial message from router and set this markets ID
+        try {
+          Database.registerInstrument("TEST", "TEST", "TEST INSTRUMENT");
+        } catch (Exception e) {
+          log.warning(String.format("An exception occured when attempting to write the instrument to the DB: [%s]\nThe application will continue, but reporting my be affected.\n", e.getMessage()));
+        }
+
         receiveAndSetLogonId();
         sendMarketName();
         listInstruments();
+        market.saveInstruments();
 
         Order order = null;
         while (true) {
