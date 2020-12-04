@@ -118,7 +118,7 @@ public class App {
         cls();
         while (true) {
             try {
-                System.out.print("How many units would you like to purchase? : ");
+                System.out.print("How many units would you like to purchase/sell? : ");
                 return Integer.parseInt(userInput.nextLine());
             } catch (Exception e) {
                 System.out.println("Must be an integer..");

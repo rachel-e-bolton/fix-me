@@ -47,7 +47,7 @@ public class Database {
 
   public static void checkTransactionsSchema() throws SQLException, ClassNotFoundException {
     String sql = "CREATE TABLE IF NOT EXISTS transactions (\n" + "	broker_id varchar NOT NULL,\n"
-        + "	market_name varchar NOT NULL,\n" + "	instrument_code varchar NOT NULL,\n"
+        + "	market_name varchar NOT NULL,\n"
         + "	instrument_name varchar NOT NULL,\n" + "	quantity integer NOT NULL,\n"
         + " quoted_price double NOT NULL,\n"
         + "	transaction_type varchar CHECK(transaction_type IN ('BUY','SELL')) NOT NULL,\n"
@@ -155,10 +155,10 @@ public class Database {
     return instruments;
   }
 
-  public static void recordTransaction(String brokerId, String marketName, String instrumentCode, String instrumentName,
+  public static void recordTransaction(String brokerId, String marketName, String instrumentName,
       Integer quantity, Double quotedPrice, String transactionType, String transactionStatus)
       throws SQLException, ClassNotFoundException {
-    String sql = "INSERT INTO transactions(broker_id,market_name,instrument_code,instrument_name,quantity,quoted_price,transaction_type,transaction_status,created_date) VALUES (?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)";
+    String sql = "INSERT INTO transactions(broker_id,market_name,instrument_name,quantity,quoted_price,transaction_type,transaction_status,created_date) VALUES (?,?,?,?,?,?,?,CURRENT_TIMESTAMP)";
     Connection conn = getInstance();
 
     try {
@@ -166,12 +166,11 @@ public class Database {
 
       pStatement.setString(1, brokerId);
       pStatement.setString(2, marketName);
-      pStatement.setString(3, instrumentCode);
-      pStatement.setString(4, instrumentName);
-      pStatement.setInt(5, quantity);
-      pStatement.setDouble(6, quotedPrice);
-      pStatement.setString(7, transactionType);
-      pStatement.setString(8, transactionStatus);
+      pStatement.setString(3, instrumentName);
+      pStatement.setInt(4, quantity);
+      pStatement.setDouble(5, quotedPrice);
+      pStatement.setString(6, transactionType);
+      pStatement.setString(7, transactionStatus);
 
       pStatement.executeUpdate();
     } catch (Exception e) {
@@ -192,8 +191,8 @@ public class Database {
       ResultSet rs = statement.executeQuery(sql);
 
       while (rs.next()) {
-        transactions.add(String.format("[%s] - [%s] - [%s] - [%s] - [%d] - [%s] - [%s] - [%s] - [%s]",
-            rs.getString("broker_id"), rs.getString("market_name"), rs.getString("instrument_code"),
+        transactions.add(String.format("[%s] - [%s] - [%s] - [%d] - [%s] - [%s] - [%s] - [%s]",
+            rs.getString("broker_id"), rs.getString("market_name"),
             rs.getString("instrument_name"), rs.getInt("quantity"), rs.getDouble("quoted_price"),
             rs.getString("transaction_type"), rs.getString("transaction_status"), rs.getString("created_date")));
       }

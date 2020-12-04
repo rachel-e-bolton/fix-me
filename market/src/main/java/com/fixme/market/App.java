@@ -140,15 +140,40 @@ public class App {
 
         if (!order.valid) {
             sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Invalid Order", instrument.name)));
+
+            try {
+              Integer quantity = Integer.parseInt(order.amount);
+              Double quotedPrice = Double.parseDouble(order.price);
+
+              Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "SELL", "REJECTED");
+            } catch (Exception e) {
+              log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+            }
             return;
         }
 
         if (requestedSellPrice <= instrument.maxSellPrice) {
             instrument.availableUnits += requestedSellAmount;
             sendMessage(MessageStaticFactory.acceptOrder(order));
+            try {
+              Integer quantity = Integer.parseInt(order.amount);
+              Double quotedPrice = Double.parseDouble(order.price);
+
+              Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "SELL", "EXECUTED");
+            } catch (Exception e) {
+              log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+            }
         } else {
             log.warning(String.format("Rejected : Sell price for %s is too low", instrument.name));
             sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot sell %s at this price", instrument.name)));
+            try {
+              Integer quantity = Integer.parseInt(order.amount);
+              Double quotedPrice = Double.parseDouble(order.price);
+
+              Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "SELL", "REJECTED");
+            } catch (Exception e) {
+              log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+            }
         }        
     }
 
@@ -160,6 +185,14 @@ public class App {
 
         if (!order.valid) {
             sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Invalid Order", instrument.name)));
+            try {
+              Integer quantity = Integer.parseInt(order.amount);
+              Double quotedPrice = Double.parseDouble(order.price);
+
+              Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "BUY", "REJECTED");
+            } catch (Exception e) {
+              log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+            }
             return;
         }
 
@@ -167,13 +200,37 @@ public class App {
             if (requestedBuyAmount <= instrument.availableUnits) {
                 instrument.availableUnits -= requestedBuyAmount;
                 sendMessage(MessageStaticFactory.acceptOrder(order));
+                try {
+                  Integer quantity = Integer.parseInt(order.amount);
+                  Double quotedPrice = Double.parseDouble(order.price);
+    
+                  Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "BUY", "EXECUTED");
+                } catch (Exception e) {
+                  log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+                }
             } else {
                 log.warning(String.format("Rejected : Not enough %s units to complete order", instrument.name));
                 sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Not enough units to complete order", instrument.name)));
+                try {
+                  Integer quantity = Integer.parseInt(order.amount);
+                  Double quotedPrice = Double.parseDouble(order.price);
+    
+                  Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "BUY", "REJECTED");
+                } catch (Exception e) {
+                  log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+                }
             }
         } else {
             log.warning(String.format("Rejected : Buy price for %s is too low", instrument.name));
             sendMessage(MessageStaticFactory.rejectOrder(order, String.format("Cannot buy %s at this price", instrument.name)));
+            try {
+              Integer quantity = Integer.parseInt(order.amount);
+              Double quotedPrice = Double.parseDouble(order.price);
+
+              Database.recordTransaction(order.clientId, order.market, order.instrument, quantity, quotedPrice, "BUY", "REJECTED");
+            } catch (Exception e) {
+              log.warning(String.format("Unable to record transaction in database: [%s]", e.getMessage()));
+            }
         }
     }
 
