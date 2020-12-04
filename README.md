@@ -23,7 +23,15 @@ java -jar market/target/market-1.0-SNAPSHOT.jar
 Simple broker client with console based ui to buy and sell instruments
 
 ```
-java -jar broker/target/brokerr-1.0-SNAPSHOT.jar
+java -jar broker/target/broker-1.0-SNAPSHOT.jar
+```
+
+## Reporting
+
+Two simple reports to demonstrate the database logging that has been implemented.
+
+```
+java -jar reporting/target/reporting-1.0-SNAPSHOT.jar
 ```
 
 ## Simulation
